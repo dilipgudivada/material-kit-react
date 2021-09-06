@@ -36,6 +36,8 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "@material-ui/icons": "^4.11.2",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@iconify/icons-ant-design": "^1.1.0",
@@ -66,7 +68,22 @@
     "simplebar": "^5.3.5",
     "simplebar-react": "^2.3.5",
     "web-vitals": "^2.1.0",
-    "yup": "^0.32.9"
+    "yup": "^0.32.9",
+    "bootstrap": "^5.0.2",
+    "jquery": "^3.6.0",
+    "jspdf": "^2.3.1",
+    "jspdf-autotable": "^3.5.20",
+    "load-script": "^1.0.0",
+    "moment": "^2.29.1",
+    "popper.js": "^1.16.1",
+    "react-bootstrap-table-next": "^4.0.3",
+    "react-bootstrap-table2-paginator": "^2.1.2",
+    "react-draggable": "^4.4.3",
+    "react-redux": "^7.2.4",
+    "react-toastify": "^7.0.4",
+    "redux": "^4.1.1",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
@@ -81,6 +98,8 @@
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "^2.3.1"
+    "prettier": "^2.3.1",
+    "css-loader": "^5.2.6",
+    "style-loader": "^3.0.0"
   }
 }

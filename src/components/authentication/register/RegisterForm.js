@@ -1,107 +1,291 @@
-import * as Yup from 'yup';
-import { useState } from 'react';
-import { Icon } from '@iconify/react';
-import { useFormik, Form, FormikProvider } from 'formik';
-import eyeFill from '@iconify/icons-eva/eye-fill';
-import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // material
-import { Stack, TextField, IconButton, InputAdornment } from '@material-ui/core';
+import { Stack, TextField, Grid } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
 
 // ----------------------------------------------------------------------
 
 export default function RegisterForm() {
-  const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
+  // const navigate = useNavigate();
 
-  const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('First name required'),
-    lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
-  });
 
-  const formik = useFormik({
-    initialValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: ''
-    },
-    validationSchema: RegisterSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+  // Render Form Fields
+  const renderFormFields = () => {
+    // Fields For Roles
+    const insuranceAgentFormFields = [
+      'role',
+      'firstName',
+      'lastName',
+      'mobileNumber',
+      'emailAddress',
+      'dateOfBirth',
+      'gender',
+      'taxId',
+      'providerName',
+      'npiNumber',
+      'address',
+      'zipCode',
+      'location',
+      'country'
+    ];
+    const dentalOfficeFormFields = [
+      'role',
+      'firstName',
+      'lastName',
+      'mobileNumber',
+      'emailAddress',
+      'dateOfBirth',
+      'gender',
+      'practiceName',
+      'taxId',
+      'providerName',
+      'npiNumber',
+      'address',
+      'zipCode',
+      'location',
+      'country'
+    ];
+
+    // Fields
+    const formFields = [
+      {
+        id: 'role',
+        controlType: 'select',
+        options: _.filter(userRoles, (role) => !role.hidden),
+        props: {
+          name: 'role',
+          required: true,
+          label: 'Choose Your Role',
+          onChange: onChangeRole,
+          value: role
+        }
+      },
+      {
+        id: 'firstName',
+        controlType: 'text',
+        props: {
+          name: 'firstName',
+          value: details.firstName,
+          label: 'First Name',
+          required: true
+        }
+      },
+      {
+        id: 'lastName',
+        controlType: 'text',
+        props: {
+          name: 'lastName',
+          value: details.lastName,
+          label: 'Last Name',
+          required: true
+        }
+      },
+      {
+        id: 'mobileNumber',
+        controlType: 'text',
+        props: {
+          name: 'mobileNumber',
+          value: details.mobileNumber,
+          label: 'Mobile Number',
+          required: true
+        }
+      },
+      {
+        id: 'emailAddress',
+        controlType: 'text',
+        props: {
+          name: 'emailAddress',
+          value: details.emailAddress,
+          label: 'Email Address',
+          required: true
+        }
+      },
+      {
+        id: 'dateOfBirth',
+        controlType: 'date',
+        props: {
+          name: 'dateOfBirth',
+          value: details.dateOfBirth,
+          label: 'Date of Birth'
+        }
+      },
+      {
+        id: 'gender',
+        controlType: 'select',
+        options: _.filter(genders, (gender) => !gender.hidden),
+        props: {
+          name: 'gender',
+          label: 'Gender',
+          onChange: onChangeGender,
+          required: true,
+          value: gender
+        }
+      },
+      {
+        id: 'practiceName',
+        controlType: 'text',
+        props: {
+          name: 'practiceName',
+          value: details.practiceName,
+          label: 'Practice Name',
+          required: true
+        }
+      },
+      {
+        id: 'taxId',
+        controlType: 'text',
+        props: {
+          name: 'taxId',
+          value: details.taxId,
+          label: 'Tax ID',
+          required: true
+        }
+      },
+      {
+        id: 'providerName',
+        controlType: 'text',
+        props: {
+          name: 'providerName',
+          value: details.providerName,
+          label: 'Provider Name'
+        }
+      },
+      {
+        id: 'npiNumber',
+        controlType: 'text',
+        props: {
+          maxLength: 11,
+          name: 'npiNumber',
+          value: details.npiNumber,
+          label: 'NPI #',
+          required: true
+        }
+      },
+      {
+        id: 'address',
+        controlType: 'text',
+        props: {
+          name: 'address',
+          value: details.address,
+          label: 'Address',
+          required: true
+        }
+      },
+      {
+        id: 'zipCode',
+        controlType: 'text',
+        props: {
+          name: 'zipCode',
+          value: details.zipCode,
+          label: 'ZIP Code',
+          required: true
+        }
+      },
+      {
+        id: 'location',
+        controlType: 'select',
+        options: locations,
+        props: {
+          name: 'location',
+          label: 'Location',
+          onChange: onChangeLocation,
+          value: location,
+          required: true
+        }
+      },
+      {
+        id: 'country',
+        controlType: 'select',
+        options: _.filter(countries, (country) => !country.hidden),
+        props: {
+          name: 'country',
+          label: 'Country',
+          onChange: onChangeCountry,
+          value: country,
+          required: true
+        }
+      }
+    ];
+
+    let currentRoleFields;
+
+    if (_.isEqual(userRoles.dentalOffice.id, role)) {
+      currentRoleFields = dentalOfficeFormFields;
     }
-  });
+    if (_.isEqual(userRoles.insuranceAgent.id, role)) {
+      currentRoleFields = insuranceAgentFormFields;
+    }
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+    return _.map(formFields, (field) => {
+      if (!_.includes(currentRoleFields, field.id)) {
+        return null;
+      }
 
+      const key = `SignUpFormField${field.id}`;
+
+      if (_.isEqual(field.controlType, 'text')) {
+        return (
+          <Grid item key={key} xs={6}>
+            <TextField
+              {...field.props}
+              variant="outlined"
+              disabled={isSigningUp}
+              onChange={onChangeText}
+              fullWidth
+            />
+          </Grid>
+        );
+      }
+
+      if (_.isEqual(field.controlType, 'select')) {
+        return (
+          <Grid item key={key} xs={6}>
+            <FormControl variant="outlined" style={{ width: '100%' }}>
+              <InputLabel>{field.props.label}</InputLabel>
+              <Select disabled={isSigningUp} {...field.props}>
+                {_.map(field.options, (option) => (
+                  <MenuItem key={`${key}MenuItem${option.id}`} value={option.id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        );
+      }
+
+      if (_.isEqual(field.controlType, 'date')) {
+        return (
+          <Grid item key={key} xs={6}>
+            <TextField
+              {...field.props}
+              type="date"
+              variant="outlined"
+              disabled={isSigningUp}
+              onChange={onChangeText}
+              InputLabelProps={{
+                shrink: true
+              }}
+              fullWidth
+            />
+          </Grid>
+        );
+      }
+
+      return null;
+    });
+  };
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={3}>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              fullWidth
-              label="First name"
-              {...getFieldProps('firstName')}
-              error={Boolean(touched.firstName && errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
-            />
-
-            <TextField
-              fullWidth
-              label="Last name"
-              {...getFieldProps('lastName')}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-            />
-          </Stack>
-
-          <TextField
-            fullWidth
-            autoComplete="username"
-            type="email"
-            label="Email address"
-            {...getFieldProps('email')}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
-          />
-
-          <TextField
-            fullWidth
-            autoComplete="current-password"
-            type={showPassword ? 'text' : 'password'}
-            label="Password"
-            {...getFieldProps('password')}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton edge="end" onClick={() => setShowPassword((prev) => !prev)}>
-                    <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            error={Boolean(touched.password && errors.password)}
-            helperText={touched.password && errors.password}
-          />
-
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            loading={isSubmitting}
-          >
-            Register
-          </LoadingButton>
+    <div>
+      <Stack spacing={3}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+          {renderFormFields()}
         </Stack>
-      </Form>
-    </FormikProvider>
+
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading>
+          Register
+        </LoadingButton>
+      </Stack>
+    </div>
   );
 }
